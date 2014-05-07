@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Empty filter chain for the login page -->
+	<http pattern="/login/**" security="none" />
+	<http pattern="/webassets/**" security="none" />
+
+	<!-- Additional filter chain for normal users, matching all other requests -->
+	<http pattern="/jmx-console/**" auto-config="true">
+		<intercept-url pattern="/jmx-console/**" access='ROLE_ADMIN' />
+		<form-login default-target-url="/jmx-console" login-page="/login" login-processing-url="/do_login" />
+		<logout />
+	</http>
+
+	<http once-per-request="true" create-session="never" entry-point-ref="authDeniedEntryPoint" use-expressions="true">
+		<session-management session-fixation-protection="none" />
+		<remember-me services-ref="rememberMeServices" key="thisismysecretencryptionkey"/>
+	    <form-login default-target-url="/jmx-console"  login-page="/login" login-processing-url="/do_login"/>
+		
+		<intercept-url pattern="/user/v1/create" access="permitAll" />
+		<intercept-url pattern="/entry/v1/create" access="permitAll" />
+		<intercept-url pattern="/public/**" access="permitAll" />
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+	</http>
+	
+	<beans:bean id="rememberMeServices" class="com.kendelong.service.security.HeaderBasedTokenRememberMeServices">
+		<beans:constructor-arg value="thisismysecretencryptionkey" />
+		<beans:constructor-arg ref="userDetailsService"/>
+		<beans:property name="headerName" value="X-MySpringApp-Auth"/>
+		<beans:property name="tokenValiditySeconds" value="157680000"/>
+	</beans:bean>
+
+	<authentication-manager alias="authenticationManager">
+	   <authentication-provider user-service-ref="userDetailsService" >
+	   	<password-encoder ref="passwordEncoder"/>
+	   </authentication-provider>
+	</authentication-manager>
+	
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
+	<beans:bean id="userDetailsService" class="com.kendelong.service.security.DatabaseUserDetailsService"/>
+	
+	<beans:bean id="authDeniedEntryPoint" class="com.kendelong.service.security.AuthenticationDeniedEntryPoint"/>
+	
+	
+</beans:beans>

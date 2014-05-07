@@ -1,0 +1,63 @@
+
+Output from LoginServiceTest
+{
+    "message": "Successful login",
+    "token": "NjA6MTU1NzEyMDAyNzg3MDowN2VjYmE3ZjU1Y2MwYWI0OTZjYWRmOGViZjNkNDk1Nw",
+    "status": "success",
+    "payload": {
+        "id": 60,
+        "timezone": "America/Los_Angeles",
+        "email": "s45GR3rk@test.com",
+        "active": true,
+        "birthDate": "2014-02-09",
+        "createDate": "2014-05-06 22:20:28",
+        "updateDate": "2014-05-06 22:20:28"
+    }
+}
+
+Output from UpdateUserTest
+{
+    "message": "Successful login",
+    "token": "NjI6MTU1NzEyMDAyODQzMjo1YmU0MWVkNmYxM2JmNjNiNGI0OTBhOTJhZDgxZmYzNw",
+    "status": "success",
+    "payload": {
+        "id": 62,
+        "timezone": "America/Los_Angeles",
+        "email": "updatedSEhDZxLx@update.com",
+        "active": true,
+        "birthDate": "2014-02-09",
+        "createDate": "2014-05-06 22:20:28",
+        "updateDate": "2014-05-06 22:20:28"
+    }
+}
+
+Output from CreateUserTest
+{
+    "message": "Successfully created user",
+    "token": "NjY6MTU1NzEyMDAyOTU2OTo2MWI5ODc0YjIyY2Q4NDA1MWZlMjNlMmY2M2I2MzY0OQ",
+    "status": "success",
+    "payload": {
+        "id": 66,
+        "timezone": "America/Los_Angeles",
+        "email": "UKyBc7gI@test.com",
+        "active": true,
+        "birthDate": "2014-02-09",
+        "createDate": "2014-05-06 22:20:29",
+        "updateDate": "2014-05-06 22:20:29"
+    }
+}
+
+Output from FetchUserTest
+{
+    "message": "User located",
+    "status": "success",
+    "payload": {
+        "id": 68,
+        "timezone": "America/Los_Angeles",
+        "email": "xmlZwvQl@test.com",
+        "active": true,
+        "birthDate": "2014-02-09",
+        "createDate": "2014-05-06 22:20:30",
+        "updateDate": "2014-05-06 22:20:30"
+    }
+}

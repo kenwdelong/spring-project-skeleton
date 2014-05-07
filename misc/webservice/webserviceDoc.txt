@@ -1,0 +1,14 @@
+The web services are all JSON based.  It is not a strict REST implementation; instead of fully using HTTP verbs we used GET and POST only and used urls 
+like /user/create, hoping that it would be easier on the clients.
+
+There is a functional test for each service.  Each web service is numbered, and access to that service is encapsulated in that test.  For example, all
+the code for accessing the /user/create service is in CreateUserService_1.groovy in the src/test/java folder.  The top of each file will have the URL
+(in this case /user/v1/create).  Most of the POSTs will define a body variable, which is a hashmap that represents the JSON to be posted. For example
+		def body = [email: theemail, password: 'myPass', birthDate: '2014-02-09', name: 'Bubba', timezone: 'America/Los_Angeles']
+implies JSON like {"email": "some@email.addy.com", "password":"myPass", "birthDate":"2014-02-09",....}
+Each service is tested primarily by a companion test, in this case called CreateUserTest.  This is where the business rules for that service are
+specified.  The actual HTTP request is made by the superclass BaseWebService using Groovy's HTTPBuilder.  (http://groovy.codehaus.org/modules/http-builder/home.html)
+
+One test in each test class calls the method prettyPrint() which prints the return JSON from the web service.  These are collected in the file
+/misc/webservice/jsonOutputs.txt, so that you can read them instead of having to run the tests.
+

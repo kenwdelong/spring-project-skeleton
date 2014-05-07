@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+		
+	<aop:aspectj-autoproxy/>
+
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>file:#{systemProperties['catalina.home']}/conf/myspringapp.properties</value>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+	<bean id="datasource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+		<property name="username" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="initialSize" value="5" />
+		<property name="minIdle" value="5" />
+		<property name="maxActive" value="30" />
+		<property name="maxIdle" value="30" />
+		<property name="maxWait" value="5000" />
+		<property name="maxAge" value="21600000" /> <!-- 6 hours -->
+		<property name="defaultAutoCommit" value="false" />
+		<property name="validationQuery" value="select 1" />
+		<property name="validationInterval" value="30000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="minEvictableIdleTimeMillis" value="30000" />
+		<property name="timeBetweenEvictionRunsMillis" value="10000" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="120" /> <!-- Timeout IN SECONDS before an abandoned(in use) connection can be removed. The value should be set to the longest running query your applications might have -->
+		<property name="jmxEnabled" value="true" /> <!-- used to report SlowQueryReportJmx -->
+		<property name="jdbcInterceptors"
+			value="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;
+                     org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;
+                     org.apache.tomcat.jdbc.pool.interceptor.SlowQueryReport(threshold=1000);
+                     org.apache.tomcat.jdbc.pool.interceptor.SlowQueryReportJmx(threshold=1000)" />
+	</bean>
+
+
+	<bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
+		<property name="dataSource" ref="datasource" />
+		<property name="initOnMigrate" value="true"/>
+		<property name="outOfOrder" value="true"/>
+	</bean>
+	
+	<jpa:repositories base-package="com.kendelong.service.dao"/>
+	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
+	<tx:annotation-driven/>
+	
+    <bean id="myEmf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="datasource"/>
+        <property name="packagesToScan" value="com.kendelong.domain"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="generateDdl" value="false" />
+                <property name="showSql" value="false"/>
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect"/>
+                <property name="database" value="MYSQL"/>
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <value>
+                hibernate.generate_statistics = true
+                hibernate.cache.use_second_level_cache = true
+                hibernate.cache.region.factory_class = org.hibernate.cache.ehcache.EhCacheRegionFactory
+                hibernate.cache.use_query_cache = true
+                net.sf.ehcache.configurationResourceName = META-INF/ehcache/ehcache.xml
+                
+            </value>
+        </property>
+    </bean>
+    
+    
+    <!-- =============================== JMX ================================== -->
+    <bean class="com.kendelong.monitoring.MonitoringAspect"/>
+    
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+        <property name="assembler" ref="assembler"/>
+        <property name="namingStrategy" ref="namingStrategy"/>
+        <property name="autodetect" value="true"/>
+    </bean>
+
+    <bean id="jmxAttributeSource" class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource"/>
+
+    <bean id="assembler" class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
+        <property name="attributeSource" ref="jmxAttributeSource"/>
+    </bean>
+
+    <bean id="namingStrategy" class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
+        <property name="attributeSource" ref="jmxAttributeSource"/>
+    </bean>
+    
+	
+	<!-- ====================  MAIL ====================== -->
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${smtp.host}" />
+		<property name="username" value="${smtp.username}"/>
+		<property name="password" value="${smtp.password}"/>
+    	<property name="protocol" value="smtps" />
+    	<property name="javaMailProperties">
+	        <props>
+	            <prop key="mail.smtps.auth">true</prop>
+	            <prop key="mail.smtp.ssl.enable">true</prop>
+	            <prop key="mail.transport.protocol">smtps</prop>
+	        </props>
+	    </property>
+	</bean>
+	
+</beans>

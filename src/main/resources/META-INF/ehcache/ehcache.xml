@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="ehcache.xsd"
+	name="myspringapp">
+
+    <diskStore path="java.io.tmpdir/ehcache-myspringapp"/>
+
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+            properties="peerDiscovery=automatic,
+                        multicastGroupAddress=230.1.1.1,
+                        multicastGroupPort=5001, timeToLive=1"/>
+
+    <cacheManagerPeerListenerFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"/>
+
+  <defaultCache
+           maxElementsInMemory="10000"
+           timeToIdleSeconds="1200" 
+           timeToLiveSeconds="3600"
+           statistics="true"
+           eternal="false"
+           memoryStoreEvictionPolicy="LFU"
+           overflowToDisk="false" />
+
+  <!-- It is important that the cache timeout of the underlying cache implementation be set to 
+       a higher value than the timeouts of any of the query caches. -->
+  <cache name="org.hibernate.cache.internal.StandardQueryCache"
+           maxElementsInMemory="20000"
+           timeToIdleSeconds="1200"
+           timeToLiveSeconds="3600"
+           statistics="true"
+           eternal="false"
+           memoryStoreEvictionPolicy="LFU"
+           overflowToDisk="false" />
+           
+  <!-- This is here so that authoring updates are propagated throughout the cluster.
+       This should be the only cache that needs to replicate puts, and also to
+       replicate updates via copy. -->
+  <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+          maxElementsInMemory="100"
+          eternal="true"
+          overflowToDisk="false">
+          <cacheEventListenerFactory
+               class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+               properties="replicateAsynchronously=true, replicatePuts=true,
+                           replicateUpdates=true, replicateUpdatesViaCopy=true,
+                           replicateRemovals=true, 
+                           asynchronousReplicationIntervalMillis=500"
+          />
+  </cache>
+	
+	<cache name="com.kendelong.domain.User"
+           maxElementsInMemory="2000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="21600"
+           statistics="true"
+           memoryStoreEvictionPolicy="LFU"
+           overflowToDisk="false">
+           <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=false,
+                            replicateUpdates=true, replicateUpdatesViaCopy=false,
+                            replicateRemovals=true, 
+                            asynchronousReplicationIntervalMillis=5000"
+           />
+    </cache>
+
+	<cache name="com.kendelong.domain.Scale"
+           maxElementsInMemory="2000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="21600"
+           statistics="true"
+           memoryStoreEvictionPolicy="LFU"
+           overflowToDisk="false">
+           <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=false,
+                            replicateUpdates=true, replicateUpdatesViaCopy=false,
+                            replicateRemovals=true, 
+                            asynchronousReplicationIntervalMillis=5000"
+           />
+    </cache>
+    
+    
+</ehcache>

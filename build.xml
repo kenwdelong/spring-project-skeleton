@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="myspringapp">
+
+	<property name="tomcat.home.dir" value="/java/apache-tomcat-7.0.50"/>
+	
+	<target name="configTomcat">
+        <copy todir="${tomcat.home.dir}" verbose="true" overwrite="true">
+        	<fileset dir="./misc/tomcat"/>
+        </copy>
+    </target>
+
+</project>
