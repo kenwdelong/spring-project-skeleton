@@ -38,11 +38,9 @@ public class GlobalErrorHandler
 	public ResponseEntity<WebServiceResponse> handleBindingAndValidationError(BindException be)
 	{
 		def message = be.allErrors.collect { it.defaultMessage}.join(',')  // prints 309
-		//def message = be.allErrors.collect {it.codes[1]}.join(',')   // prints NotNull.email
-		WebServiceResponse response = new WebServiceResponseWithError(status: 'failure', message: 'Binding or validation error', errorCode: message)
-		//return new ResponseEntity(response, HttpStatus.BAD_REQUEST)
-		// This doesn't make sense, but Android http client won't parse the response body unless the status code is 200.
-		return new ResponseEntity(response, HttpStatus.OK)
+		def selfDocumentingMessage = be.allErrors.collect {it.codes[1]}.join(',')   // prints NotNull.email - you probably want this one, it's better
+		WebServiceResponse response = new WebServiceResponseWithError(status: 'failure', message: "Binding or validation error: [$selfDocumentingMessage]", errorCode: message)
+		return new ResponseEntity(response, HttpStatus.BAD_REQUEST)
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
