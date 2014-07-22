@@ -26,6 +26,7 @@
 		<intercept-url pattern="/user/v1/create" access="permitAll" />
 		<intercept-url pattern="/entry/v1/create" access="permitAll" />
 		<intercept-url pattern="/public/**" access="permitAll" />
+		<intercept-url pattern="/favicon.ico" access="permitAll" />
 		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
 	</http>
 	
