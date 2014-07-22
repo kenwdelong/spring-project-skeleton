@@ -1,7 +1,2 @@
-rethink the hash
-login form broken on prod (https)  think some more about how to do this (either abort or use self-signed cert)
-2. Can you add a small service to check to see whether an email
-address has an account? When someone is registering, I want to give
-them feedback on screen 1 if their email address is already
-registered.
-
+- move rest web services to a url prefix of /service.  Then we can target authentication better and hopefully get rid of some of the http filter
+chains.
