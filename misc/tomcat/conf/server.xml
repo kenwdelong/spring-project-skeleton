@@ -79,6 +79,7 @@
                clientAuth="false" sslProtocol="TLS" />
     -->
     
+    <!--  Need to generate a keystore file in order to enable SSL  
     <Connector SSLEnabled="true" 
 			   URIEncoding="UTF-8" 
 			   clientAuth="false" 
@@ -92,7 +93,7 @@
 			   secure="true" 
 			   sslProtocol="TLS" 
 			   keystoreType="JKS"/>
-    
+    -->
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <Connector port="8009" protocol="AJP/1.3" redirectPort="8443"/>

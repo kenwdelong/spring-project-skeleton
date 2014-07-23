@@ -58,7 +58,7 @@ class BaseWebService
 		if(StringUtils.isNotBlank(prop))
 			return prop;
 		else
-			return "https://localhost:8443";
+			return "http://localhost:8080";
 	}
 	
 	protected def callService(String serviceUri, def theBody, String token, def successHandler, def failureHandler)
