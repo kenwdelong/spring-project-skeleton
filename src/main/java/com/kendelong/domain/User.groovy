@@ -29,10 +29,6 @@ class User extends BaseEntity
 	@Column(name="time_zone")
 	TimeZone timezone
 	
-	@Column(name='birth_date')
-	@JsonFormat(timezone=IDateConstants.TIMEZONE, pattern=IDateConstants.DATE_FORMAT)
-	Date birthDate
-	
 
 }  
 

@@ -69,7 +69,7 @@ class UserController
 		return response
 	}
 	
-	@RequestMapping("/user/v1/{id}")
+	@RequestMapping("/service/user/v1/{id}")
 	public WebServiceResponse showUser(@PathVariable Long id, User user)
 	{
 		if(!id.equals(user.id))
@@ -80,7 +80,7 @@ class UserController
 			throw new IllegalArgumentException("No user found for id [$id]")
 	}
 	
-	@RequestMapping(value="/user/v1/update", method=RequestMethod.POST)
+	@RequestMapping(value="/service/user/v1/update", method=RequestMethod.POST)
 	public WebServiceResponse updateUser(User user, @Validated(UserUpdateValidationGroup.class) @RequestBody UserRegistrationBean registration, BindingResult errors)
 	{
 		if(errors.hasErrors()) throw new BindException(errors)

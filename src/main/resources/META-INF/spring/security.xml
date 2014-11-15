@@ -7,27 +7,16 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- Empty filter chain for the login page -->
-	<http pattern="/login/**" security="none" />
-	<http pattern="/webassets/**" security="none" />
+	<http pattern="/service/**" once-per-request="true" create-session="never" entry-point-ref="authDeniedEntryPoint" use-expressions="true">
+		<session-management session-fixation-protection="none" />
+		<remember-me services-ref="rememberMeServices" key="mysecretkey"/>		
+		<intercept-url pattern="/**" access="hasRole('ROLE_MEMBER')" />
+	</http>
 
-	<!-- Additional filter chain for normal users, matching all other requests -->
-	<http pattern="/jmx-console/**" auto-config="true">
+	<http auto-config="true">
 		<intercept-url pattern="/jmx-console/**" access='ROLE_ADMIN' />
 		<form-login default-target-url="/jmx-console" login-page="/login" login-processing-url="/do_login" />
 		<logout />
-	</http>
-
-	<http once-per-request="true" create-session="never" entry-point-ref="authDeniedEntryPoint" use-expressions="true">
-		<session-management session-fixation-protection="none" />
-		<remember-me services-ref="rememberMeServices" key="thisismysecretencryptionkey"/>
-	    <form-login default-target-url="/jmx-console"  login-page="/login" login-processing-url="/do_login"/>
-		
-		<intercept-url pattern="/user/v1/create" access="permitAll" />
-		<intercept-url pattern="/entry/v1/create" access="permitAll" />
-		<intercept-url pattern="/public/**" access="permitAll" />
-		<intercept-url pattern="/favicon.ico" access="permitAll" />
-		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
 	</http>
 	
 	<beans:bean id="rememberMeServices" class="com.kendelong.service.security.HeaderBasedTokenRememberMeServices">
