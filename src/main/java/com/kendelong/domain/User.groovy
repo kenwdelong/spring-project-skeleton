@@ -29,6 +29,5 @@ class User extends BaseEntity
 	@Column(name="time_zone")
 	TimeZone timezone
 	
-
 }  
 

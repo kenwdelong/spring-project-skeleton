@@ -1,5 +1,7 @@
 package com.kendelong.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kendelong.domain.User;
 import com.kendelong.service.dao.UserRepository;
+import com.kendelong.util.monitoring.graphite.GraphiteClient;
 
 @RestController
 /*
@@ -16,13 +19,21 @@ import com.kendelong.service.dao.UserRepository;
  */
 public class SimpleController
 {
-	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private UserRepository repo;
+	
+	@Autowired
+	private GraphiteClient graphiteClient;
+	
+	@Autowired
+	private SlowClient slowClient;
 
 	@RequestMapping("/hello")
 	public String sayHello()
 	{
+		graphiteClient.increment("hello");
 		return "well hello there";
 	}
 	
@@ -73,5 +84,15 @@ public class SimpleController
 		webServiceResponse.setStatus("success");
 		return webServiceResponse;
 	}
+	
+	@RequestMapping("/public/callslow")
+	public WebServiceResponse callSlowly() throws Exception
+	{
+		logger.info("Entering callSlowly()");
+		WebServiceResponse webServiceResponse = slowClient.callSlowWebService();
+		logger.info("Leaving callSlowly()");
+		return webServiceResponse;
+	}
+
 
 }

@@ -1,0 +1,2 @@
+- move rest web services to a url prefix of /service.  Then we can target authentication better and hopefully get rid of some of the http filter
+chains.

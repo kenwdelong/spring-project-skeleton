@@ -4,12 +4,14 @@
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 		
-	<aop:aspectj-autoproxy/>
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
 
 	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
@@ -86,24 +88,57 @@
     
     
     <!-- =============================== JMX ================================== -->
-    <bean class="com.kendelong.monitoring.MonitoringAspect"/>
-    
-    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
-        <property name="assembler" ref="assembler"/>
-        <property name="namingStrategy" ref="namingStrategy"/>
-        <property name="autodetect" value="true"/>
-    </bean>
+	<context:mbean-export/>
+	<context:mbean-server/>    
 
-    <bean id="jmxAttributeSource" class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource"/>
+	<bean class="com.kendelong.util.circuitbreaker.CircuitBreakerAspect" scope="prototype">
+		<property name="graphiteClient" ref="graphiteClient"/>
+	</bean>
+	<bean class="com.kendelong.util.concurrency.ConcurrencyLimitingAspect" scope="prototype">
+		<property name="graphiteClient" ref="graphiteClient"/>
+	</bean>
+	<bean class="com.kendelong.util.retry.RetryInterceptor" scope="prototype">
+		<property name="exceptionClassesToRetry">
+			<list>
+				<value>java.lang.IllegalArgumentException</value>
+			</list>
+		</property>
+		<property name="graphiteClient" ref="graphiteClient"/>
+	</bean>
+	<bean class="com.kendelong.util.performance.PerformanceMonitoringAspect" scope="prototype">
+		<property name="graphiteClient" ref="graphiteClient"/>
+	</bean>
+	
+		
+	<bean id="aspectJmxExporter" class="com.kendelong.util.spring.JmxExportingAspectPostProcessor" lazy-init="false">
+		<property name="mbeanExporter" ref="mbeanExporter"/>
+		<property name="annotationToServiceNames">
+			<map>
+				<entry key="com.kendelong.util.circuitbreaker.CircuitBreakerAspect" value="circuitbreaker"/>
+				<entry key="com.kendelong.util.concurrency.ConcurrencyLimitingAspect" value="concurrencyThrottle" />
+				<entry key="com.kendelong.util.retry.RetryInterceptor" value="retriedOperations" />
+				<entry key="com.kendelong.util.performance.PerformanceMonitoringAspect" value="performance" />
+			</map>
+		</property>
+		<property name="jmxDomain" value="app.mystuff"/>
+	</bean>
+	    
+	<bean id="graphiteClient" class="com.kendelong.util.monitoring.graphite.GraphiteClient">
+		<property name="serverEnv" value="dev" />
+		<property name="appName" value="testProject" />
+		<property name="statsdHost" value="127.0.0.1" />
+		<property name="statsdPort" value="8125" />
+	</bean>
+	
+	<bean class="com.kendelong.util.monitoring.graphite.GraphiteAppender">
+		<property name="graphiteClient" ref="graphiteClient"/>
+	</bean>
+	
 
-    <bean id="assembler" class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
-        <property name="attributeSource" ref="jmxAttributeSource"/>
-    </bean>
-
-    <bean id="namingStrategy" class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
-        <property name="attributeSource" ref="jmxAttributeSource"/>
-    </bean>
-    
+	<bean class="com.kendelong.util.ehcache.EhcacheJmxBootstrapper" autowire="byType"/>
+	<bean class="com.kendelong.util.ehcache.EhcacheExaminer"/>
+	
+	<bean class="com.kendelong.util.jmx.LogConfigurer"/>
 	
 	<!-- ====================  MAIL ====================== -->
 
@@ -119,6 +154,20 @@
 	            <prop key="mail.transport.protocol">smtps</prop>
 	        </props>
 	    </property>
+	</bean>
+	
+	<!-- ================== HTTP =========================== -->
+	
+	<bean class="com.kendelong.util.http.HttpConnectionService">
+		<property name="httpClientStrategy" ref="pooledHttpStrategy"/>
+	</bean>
+	
+	<bean id="pooledHttpStrategy" class="com.kendelong.util.http.PooledHttpClientStrategy">
+		<property name="connectionTimeoutInMs" value="1"/>
+		<property name="socketTimeoutInMs" value="6000"/>
+		<property name="retrieveConnectionTimeoutInMs" value="1000"/>
+		<property name="maxConnectionsPerHost" value="2"/>
+		<property name="maxTotalConnections" value="2"/>
 	</bean>
 	
 </beans>

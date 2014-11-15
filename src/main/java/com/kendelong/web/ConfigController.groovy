@@ -20,6 +20,9 @@ public class ConfigController
 	@RequestMapping("/public/config")
 	public WebServiceResponse showConfig()
 	{
+		println TimeZone.getDefault().getID()
+		
+		
 		def data = [buildNumber: buildNumber, buildTime: buildTime]
 		return new WebServiceResponse(status: 'success', message: 'successfully discovered config', payload: data);
 	}

@@ -28,6 +28,9 @@
 		</layout>
 	</appender>
 	
+	<appender name="graphite" class="com.kendelong.util.monitoring.graphite.GraphiteAppender">
+	</appender>
+	
 	<logger name="com.kendelong">
 		<level value="debug" />
 	</logger>
@@ -60,6 +63,7 @@
 		<priority value="trace" />
 		<appender-ref ref="console" />
 		<appender-ref ref="file" />
+		<appender-ref ref="graphite" />
 	</root>
 
 </log4j:configuration>

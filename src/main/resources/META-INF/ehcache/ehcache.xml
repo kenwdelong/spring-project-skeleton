@@ -68,22 +68,5 @@
            />
     </cache>
 
-	<cache name="com.kendelong.domain.Scale"
-           maxElementsInMemory="2000"
-           eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="21600"
-           statistics="true"
-           memoryStoreEvictionPolicy="LFU"
-           overflowToDisk="false">
-           <cacheEventListenerFactory
-                class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-                properties="replicateAsynchronously=true, replicatePuts=false,
-                            replicateUpdates=true, replicateUpdatesViaCopy=false,
-                            replicateRemovals=true, 
-                            asynchronousReplicationIntervalMillis=5000"
-           />
-    </cache>
-    
     
 </ehcache>
