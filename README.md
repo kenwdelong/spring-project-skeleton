@@ -67,3 +67,7 @@ a BaseTestClass for the tests to inherit from, which has some nice convenience h
 a map of values and the builder turns it into a JSON POST, and then parses the JSON returned.  Each test has one closure with prettyPrint() in it, so
 that in a successful run you get a printout in the console of the JSON returned by all the services.  This is copied into misc/webservices/jsonOutput.txt as
 documentation.
+
+## Branches
+- master: simple Spring project skeleton
+- stability-example: project adapted to use the Stability Utils project https://github.com/kenwdelong/stability-utils
