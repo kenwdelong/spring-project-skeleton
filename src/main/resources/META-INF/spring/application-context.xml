@@ -4,10 +4,12 @@
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
 		
 	<aop:aspectj-autoproxy/>
 
@@ -50,13 +52,13 @@
 	</bean>
 
 
-	<bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
+	<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
 		<property name="dataSource" ref="datasource" />
 		<property name="initOnMigrate" value="true"/>
 		<property name="outOfOrder" value="true"/>
 	</bean>
 	
-	<jpa:repositories base-package="com.kendelong.service.dao"/>
+	<jpa:repositories base-package="com.kendelong.service.dao" entity-manager-factory-ref="myEmf"/>
 	
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
 	<tx:annotation-driven/>
@@ -79,7 +81,6 @@
                 hibernate.cache.region.factory_class = org.hibernate.cache.ehcache.EhCacheRegionFactory
                 hibernate.cache.use_query_cache = true
                 net.sf.ehcache.configurationResourceName = META-INF/ehcache/ehcache.xml
-                
             </value>
         </property>
     </bean>
