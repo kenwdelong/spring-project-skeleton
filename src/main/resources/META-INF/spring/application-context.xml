@@ -162,11 +162,11 @@
 	</bean>
 	
 	<bean id="pooledHttpStrategy" class="com.kendelong.util.http.PooledHttpClientStrategy">
-		<property name="connectionTimeoutInMs" value="1"/>
+		<property name="connectionTimeoutInMs" value="100"/>
 		<property name="socketTimeoutInMs" value="6000"/>
 		<property name="retrieveConnectionTimeoutInMs" value="1000"/>
 		<property name="maxConnectionsPerHost" value="2"/>
-		<property name="maxTotalConnections" value="2"/>
+		<property name="maxTotalConnections" value="6"/>
 	</bean>
 	
 </beans>
