@@ -15,8 +15,9 @@
 	<context:mbean-export/>    
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	
-	<bean id="webPerfMon" class="com.kendelong.util.performance.PerformanceMonitoringAspect" scope="prototype"/>
-	
+	<bean id="webPerfMon" class="com.kendelong.util.performance.PerformanceMonitoringAspect" scope="prototype">
+		<property name="graphiteClient" ref="graphiteClient" />
+	</bean>	
 		
 	<bean id="circuitBreakerJmxExporter" class="com.kendelong.util.spring.JmxExportingAspectPostProcessor" lazy-init="false">
 		<property name="mbeanExporter" ref="mbeanExporter"/>
@@ -26,7 +27,6 @@
 			</map>
 		</property>
 		<property name="jmxDomain" value="app.mystuff.web"/>
-<!-- 		<property name="graphiteClient" ref="graphiteClient" /> -->
 	</bean>
 	
 </beans>
