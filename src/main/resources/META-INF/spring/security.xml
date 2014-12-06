@@ -9,8 +9,8 @@
 
 	<http pattern="/service/**" once-per-request="true" create-session="never" entry-point-ref="authDeniedEntryPoint" use-expressions="true">
 		<session-management session-fixation-protection="none" />
-		<remember-me services-ref="rememberMeServices" key="mysecretkey"/>		
-		<intercept-url pattern="/**" access="hasRole('ROLE_MEMBER')" />
+		<remember-me services-ref="rememberMeServices" key="thisismysecretencryptionkey"/>		
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
 	</http>
 
 	<http auto-config="true">
