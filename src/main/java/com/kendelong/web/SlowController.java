@@ -21,7 +21,7 @@ public class SlowController
 		WebServiceResponse webServiceResponse = new WebServiceResponse();
 		webServiceResponse.setMessage("Success");
 		webServiceResponse.setStatus("success");
-		logger.info("Entering respondSlowly()");
+		logger.info("Exiting respondSlowly()");
 		return webServiceResponse;
 	}
 
