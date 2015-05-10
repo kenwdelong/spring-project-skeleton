@@ -129,7 +129,7 @@
 		<property name="statsdPort" value="8125" />
 	</bean>
 	
-	<bean class="com.kendelong.util.monitoring.graphite.GraphiteAppender">
+	<bean class="com.kendelong.util.monitoring.graphite.LogbackGraphiteAppender">
 		<property name="graphiteClient" ref="graphiteClient"/>
 	</bean>
 	

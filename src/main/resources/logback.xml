@@ -1,0 +1,34 @@
+<configuration>
+
+	<jmxConfigurator />
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.home}/logs/mySpringApp.log</file>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%-21t] [%c] %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5p [%-21t] [%c{0}] %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="graphite" class="com.kendelong.util.monitoring.graphite.LogbackGraphiteAppender" />
+
+	<logger name="com.kendelong" level="DEBUG" />
+	<logger name="org" level="INFO" />
+	<logger name="com" level="INFO" />
+	<logger name="net" level="INFO" />
+	<logger name="groovyx" level="INFO" />
+	<logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="WARN" />
+
+	<root level="trace">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+		<appender-ref ref="graphite" />
+	</root>
+
+
+</configuration>
