@@ -2,9 +2,11 @@ package com.kendelong.service;
 
 import org.springframework.stereotype.Service;
 
+import com.kendelong.util.performance.MonitorPerformance;
 import com.kendelong.util.retry.RetryableOperation;
 
 @Service
+@MonitorPerformance
 public class ServiceA
 {
 	private int count = 0;
