@@ -119,9 +119,9 @@
 				<entry key="com.kendelong.util.performance.PerformanceMonitoringAspect" value="performance" />
 			</map>
 		</property>
-		<property name="jmxDomain" value="app.mystuff"/>
+		<property name="jmxDomain" value="${stability.baseDomain}"/>
 	</bean>
-	    
+	
 	<bean id="graphiteClient" class="com.kendelong.util.monitoring.graphite.GraphiteClient">
 		<property name="serverEnv" value="dev" />
 		<property name="appName" value="testProject" />
