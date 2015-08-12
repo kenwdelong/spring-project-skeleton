@@ -26,7 +26,7 @@
 				<entry key="com.kendelong.util.performance.PerformanceMonitoringAspect" value="performance" />
 			</map>
 		</property>
-		<property name="jmxDomain" value="app.mystuff.web"/>
+		<property name="jmxDomain" value="app.mystuff"/>
 	</bean>
 	
 </beans>

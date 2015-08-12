@@ -9,7 +9,7 @@ import com.kendelong.util.monitoring.webservice.WebServiceClient;
 import com.kendelong.util.performance.MonitorPerformance;
 
 @WebServiceClient
-@MonitorPerformance
+@MonitorPerformance  // needed to activate the pointcut
 @Component
 public class SlowClient
 {
