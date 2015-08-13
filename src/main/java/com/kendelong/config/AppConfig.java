@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ImportResource;
 
 @Configuration
 @ImportResource({"classpath:/META-INF/spring/application-context.xml", "classpath:/META-INF/spring/security.xml"})
-@ComponentScan(basePackages="com.kendelong.service,com.kendelong.util.jmx.service")
+@ComponentScan(basePackages="com.kendelong.service,com.kendelong.util.jmx.web.service")
 public class AppConfig
 {
 
