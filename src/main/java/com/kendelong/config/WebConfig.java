@@ -26,11 +26,11 @@ import com.mangofactory.swagger.plugin.EnableSwagger;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages="com.kendelong.web,com.kendelong.util.jmx.web.controller")
+@ComponentScan(basePackages={"com.kendelong.web", "com.kendelong.jmxconsole.web.controller", "com.kendelong.util.jmx.web"})
 @ImportResource("classpath:/META-INF/spring/mvc.xml")
 @EnableSwagger
 public class WebConfig extends WebMvcConfigurerAdapter
-{
+{ 
 	
 	@Autowired
 	UserRequestIntegrationInterceptor userRequestIntegrationInterceptor;
