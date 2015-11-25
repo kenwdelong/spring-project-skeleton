@@ -2,6 +2,7 @@ package com.kendelong.service;
 
 import org.springframework.stereotype.Service;
 
+import com.kendelong.util.concurrency.ConcurrencyThrottle;
 import com.kendelong.util.performance.MonitorPerformance;
 import com.kendelong.util.retry.RetryableOperation;
 
@@ -11,6 +12,7 @@ public class ServiceA
 {
 	private int count = 0;
 	
+	@ConcurrencyThrottle
 	@RetryableOperation
 	public String callMe()
 	{
