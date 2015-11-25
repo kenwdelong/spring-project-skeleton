@@ -9,9 +9,10 @@ import com.kendelong.util.performance.MonitorPerformance;
 @MonitorPerformance
 public class ServiceB
 {
-	@ConcurrencyThrottle
+	@ConcurrencyThrottle(threadLimit=4)
 	public String callMe()
 	{
 		return "This is service B calling";
 	}
+	
 }
